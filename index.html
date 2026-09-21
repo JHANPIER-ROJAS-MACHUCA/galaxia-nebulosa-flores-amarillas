@@ -59,15 +59,21 @@
   #datos{position:fixed;left:12px;bottom:10px;z-index:10;pointer-events:none;
     color:rgba(255,250,205,.5);font-family:'Indie Flower',cursive;font-size:15px;}
 
-  /* Botón para cambiar de nebulosa */
-  #cambiar{
-    position:fixed;right:12px;bottom:10px;z-index:20;
-    font-family:'Indie Flower','Segoe Script',cursive;font-size:17px;
+  /* Botones de las 3 nebulosas */
+  #nebulosas{position:fixed;right:12px;bottom:10px;z-index:20;
+    display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  #nebulosas a{
+    font-family:'Indie Flower','Segoe Script',cursive;font-size:16px;
     color:#FFFACD;text-decoration:none;text-shadow:0 0 7px #FFD700;
     background:rgba(0,0,0,.55);border:1px solid rgba(255,215,0,.65);
-    padding:8px 16px;border-radius:100px;white-space:nowrap;
+    padding:7px 14px;border-radius:100px;white-space:nowrap;
   }
-  #cambiar:active{transform:scale(.95);}
+  #nebulosas a:active{transform:scale(.95);}
+  #nebulosas a.aqui{background:#FFD700;color:#000;text-shadow:none;}
+  @media (max-width:640px){
+    #nebulosas{left:8px;right:8px;justify-content:center;}
+    #nebulosas a{font-size:14px;padding:6px 12px;}
+  }
 </style>
 </head>
 <body>
@@ -79,7 +85,11 @@
   <div id="inicio-texto">Toca para iniciar</div>
 </div>
 <div id="datos"></div>
-<a id="cambiar" href="gatitos.html">🐱 Presióname para ver algo michifantástico</a>
+<nav id="nebulosas">
+  <a href="index.html" class="aqui">🌻 Flores</a>
+  <a href="gatitos.html">🐱 Michis</a>
+  <a href="conejitos.html">🐰 Conejos</a>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
 <script>
