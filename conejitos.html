@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Galaxia Nebulosa · Gatitos 🐱</title>
-<meta name="description" content="Galaxia con agujero negro, anillo dorado y gatitos flotando entre frases cariñosas." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌻</text></svg>">
+<title>Galaxia Nebulosa · Conejitos 🐰</title>
+<meta name="description" content="Galaxia blanco-rosada con agujero negro, anillo rosa y conejitos flotando entre frases tiernas." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐰</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
@@ -19,8 +19,8 @@
   #titulo{
     position:fixed;top:40px;left:0;right:0;width:100%;
     font-family:'Indie Flower','Segoe Script',cursive;
-    font-size:2.6em;color:#FFFACD;white-space:nowrap;text-align:center;
-    text-shadow:0 0 10px #FFD700,0 0 18px #FFA500;
+    font-size:2.6em;color:#FFE9F3;white-space:nowrap;text-align:center;
+    text-shadow:0 0 10px #FF6FA5,0 0 18px #FF9EC6;
     z-index:10;pointer-events:none;
   }
   @media (max-width:768px){
@@ -36,9 +36,9 @@
   #inicio.oculta{opacity:0;visibility:hidden;pointer-events:none;}
   #inicio-flor{
     font-size:clamp(74px,23vmin,148px);line-height:1;display:block;
-    filter:drop-shadow(0 0 14px rgba(255,215,0,.75))
-           drop-shadow(0 0 36px rgba(255,165,0,.38))
-           drop-shadow(0 0 66px rgba(218,165,32,.22));
+    filter:drop-shadow(0 0 14px rgba(255,110,165,.75))
+           drop-shadow(0 0 36px rgba(255,140,190,.38))
+           drop-shadow(0 0 66px rgba(255,180,210,.22));
     animation:latido 1.35s ease-in-out infinite;transform-origin:50% 55%;
   }
   @keyframes latido{
@@ -47,7 +47,7 @@
   }
   #inicio-texto{
     font-family:'Indie Flower','Segoe Script',cursive;
-    font-size:1.8em;color:#FFFACD;text-shadow:0 0 7px #FFD700;text-align:center;
+    font-size:1.8em;color:#FFE9F3;text-shadow:0 0 7px #FF6FA5;text-align:center;
     margin-top:clamp(16px,3.5vh,28px);animation:parpadeo 2.2s ease-in-out infinite;
   }
   @keyframes parpadeo{0%,100%{opacity:.55;}50%{opacity:1;}}
@@ -57,14 +57,14 @@
 
   /* Contador discreto */
   #datos{position:fixed;left:12px;bottom:10px;z-index:10;pointer-events:none;
-    color:rgba(255,250,205,.5);font-family:'Indie Flower',cursive;font-size:15px;}
+    color:rgba(255,233,243,.5);font-family:'Indie Flower',cursive;font-size:15px;}
 
   /* Botón para cambiar de nebulosa */
   #cambiar{
     position:fixed;right:12px;bottom:10px;z-index:20;
     font-family:'Indie Flower','Segoe Script',cursive;font-size:17px;
-    color:#FFFACD;text-decoration:none;text-shadow:0 0 7px #FFD700;
-    background:rgba(0,0,0,.55);border:1px solid rgba(255,215,0,.65);
+    color:#FFE9F3;text-decoration:none;text-shadow:0 0 7px #FF6FA5;
+    background:rgba(0,0,0,.55);border:1px solid rgba(255,110,165,.65);
     padding:8px 16px;border-radius:100px;white-space:nowrap;
   }
   #cambiar:active{transform:scale(.95);}
@@ -72,14 +72,14 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<h1 id="titulo">Feliz Día de los Michis 🐱</h1>
+<h1 id="titulo">Feliz Día de los Conejitos 🐰</h1>
 
 <div id="inicio">
-  <div id="inicio-flor" aria-hidden="true">🐱</div>
+  <div id="inicio-flor" aria-hidden="true">🐰</div>
   <div id="inicio-texto">Toca para iniciar</div>
 </div>
 <div id="datos"></div>
-<a id="cambiar" href="conejitos.html">🐰 Presióname para ver algo esponjosito</a>
+<a id="cambiar" href="index.html">🌻 Volver a las flores</a>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
 <script>
@@ -88,20 +88,20 @@
 
 /* ============ Frases propias del Día de las Flores Amarillas ============ */
 var FRASES = [
-  "🐱 Ronroneos desde la galaxia", "🐾 Huellitas de amor para ti",
-  "🐱 Eres mi michi favorito", "🐾 Que nunca falten ronroneos",
-  "🐱 Contigo todo es miau-gia", "🐾 Un gatito te manda abrazos",
-  "🐱 Tu ternura es felina", "🐾 Maúlla de felicidad hoy",
-  "🐱 Bigotes de buena suerte", "🐾 Eres amor con patitas",
-  "🐱 La galaxia ronronea por ti", "🐾 Nueve vidas de cariño",
-  "🐱 Siesta feliz, michi feliz", "🐾 Tus ojos brillan como estrellas",
-  "🐱 Pelitos de alegría", "🐾 El universo te adoptó",
-  "🐱 Miau también dice te quiero", "🐾 Suave como un minino",
-  "🐱 Hoy mandan los michis", "🐾 Reina de los gatitos",
-  "🐱 Purrfecto día para ti", "🐾 Un michi te cuida siempre",
-  "🐱 Que tu día sea esponjoso", "🐾 Feliz día entre bigotes"
+  "🐰 Suave como algodón de azúcar", "🤍 Esponjosito y feliz",
+  "🐰 Saltitos de alegría para ti", "🌸 Orejitas que escuchan tu corazón",
+  "🐰 Eres mi conejito favorito", "🤍 Peluche viviente, eso eres",
+  "🐰 Zanahorias de cariño para ti", "🌸 Que tu día sea esponjoso",
+  "🐰 Brincos de felicidad hoy", "🤍 Tierno como un algodón",
+  "🐰 La nebulosa más suave del cielo", "🌸 Flores rosas para ti",
+  "🐰 Mereces mimos infinitos", "🤍 Abrázame, soy tu conejito",
+  "🐰 Ojos brillantes, corazón dulce", "🌸 Primavera en tu sonrisa",
+  "🐰 Dormilón más lindo del mundo", "🤍 Patitas que traen suerte",
+  "🐰 Contigo todo es tierno", "🌸 Rosa como tus mejillas",
+  "🐰 El cielo está lleno de algodón", "🤍 Mi peluchito favorito",
+  "🐰 Feliz día, orejitas", "🌸 Que nunca falten los mimos"
 ];
-var FOTOS = ["assets/gatos/gato1.png","assets/gatos/gato2.png","assets/gatos/gato3.png","assets/gatos/gato4.png","assets/gatos/gato5.png"];
+var FOTOS = ["assets/conejos/conejo1.png","assets/conejos/conejo2.png","assets/conejos/conejo3.png","assets/conejos/conejo4.png","assets/conejos/conejo5.png"];
 
 /* ============ Escena base ============ */
 var canvas = document.getElementById("c");
@@ -148,7 +148,7 @@ function texturaResplandor(px, dentro, fuera){
 }
 var RESPLANDOR = 360;
 var halo = new THREE.Sprite(new THREE.SpriteMaterial({
-  map: texturaResplandor(512, "255,235,130", "255,180,0"),
+  map: texturaResplandor(512, "255,210,228", "255,130,190"),
   transparent: true, depthWrite: false
 }));
 halo.scale.set(RESPLANDOR, RESPLANDOR, 1);
@@ -160,10 +160,10 @@ function texturaAnillo(px){
   var g = c.getContext("2d"); g.translate(px/2, px/2);
   var rIn = px * 0.205, rOut = px * 0.49;
   var base = g.createRadialGradient(0, 0, rIn, 0, 0, rOut);
-  base.addColorStop(0.00, "rgba(255,255,245,1)");
-  base.addColorStop(0.30, "rgba(255,235,120,1)");
-  base.addColorStop(0.65, "rgba(255,200,40,0.95)");
-  base.addColorStop(1.00, "rgba(255,160,0,0.85)");
+  base.addColorStop(0.00, "rgba(255,250,253,1)");
+  base.addColorStop(0.30, "rgba(255,215,230,1)");
+  base.addColorStop(0.65, "rgba(255,160,200,0.95)");
+  base.addColorStop(1.00, "rgba(255,110,175,0.85)");
   g.fillStyle = base;
   g.beginPath();
   g.arc(0, 0, rOut, 0, Math.PI * 2);
@@ -176,7 +176,7 @@ function texturaAnillo(px){
     g.beginPath();
     g.arc(0, 0, r, 0, Math.PI * 2);
     g.lineWidth = (rOut - rIn) / franjas * (0.55 + Math.random() * 0.35);
-    g.strokeStyle = (i % 3 === 0) ? "rgba(110,60,0,0.20)" : "rgba(255,255,225,0.16)";
+    g.strokeStyle = (i % 3 === 0) ? "rgba(140,40,90,0.20)" : "rgba(255,240,248,0.16)";
     g.stroke();
   }
   return new THREE.CanvasTexture(c);
@@ -189,7 +189,7 @@ anillo.rotation.x = Math.PI / 2;
 scene.add(anillo);
 
 /* ============ Frases flotantes ============ */
-var DORADOS = ["#ffd700","#ffe066","#ffcc33","#ffb347","#fff2b0","#ffaa00","#f4c430","#e6b800","#ffdb58","#f0c419"];
+var DORADOS = ["#ff6fa5","#ff8fb8","#ff5f9e","#ffa4c8","#ffe0ec","#f7548f","#ff7eb0","#ffc2da","#ff4f9a","#ffd0e3"];
 function texturaFrase(texto, color){
   var c = document.createElement("canvas"); c.width = 512; c.height = 128;
   var x = c.getContext("2d");
