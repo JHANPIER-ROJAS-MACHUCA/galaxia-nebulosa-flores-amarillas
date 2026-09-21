@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Galaxia Nebulosa · Día de las Flores Amarillas 🌻</title>
+<meta name="description" content="Galaxia con agujero negro, anillo dorado y flores amarillas flotando entre frases para ella." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌻</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;
+    -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;}
+  canvas{display:block;}
+
+  /* Título fijo arriba */
+  #titulo{
+    position:fixed;top:40px;left:0;right:0;width:100%;
+    font-family:'Indie Flower','Segoe Script',cursive;
+    font-size:2.6em;color:#FFFACD;white-space:nowrap;text-align:center;
+    text-shadow:0 0 10px #FFD700,0 0 18px #FFA500;
+    z-index:10;pointer-events:none;
+  }
+  @media (max-width:768px){
+    #titulo{font-size:1.55em;top:22px;white-space:normal;padding:0 10px;line-height:1.15;}
+  }
+
+  /* Pantalla de inicio */
+  #inicio{
+    position:fixed;inset:0;background:#000;z-index:9999;cursor:pointer;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    color:#fff;transition:opacity .7s ease,visibility .7s ease;
+  }
+  #inicio.oculta{opacity:0;visibility:hidden;pointer-events:none;}
+  #inicio-flor{
+    font-size:clamp(74px,23vmin,148px);line-height:1;display:block;
+    filter:drop-shadow(0 0 14px rgba(255,215,0,.75))
+           drop-shadow(0 0 36px rgba(255,165,0,.38))
+           drop-shadow(0 0 66px rgba(218,165,32,.22));
+    animation:latido 1.35s ease-in-out infinite;transform-origin:50% 55%;
+  }
+  @keyframes latido{
+    0%,100%{transform:scale(1);}12%{transform:scale(1.15);}
+    24%{transform:scale(1);}36%{transform:scale(1.07);}50%{transform:scale(1);}
+  }
+  #inicio-texto{
+    font-family:'Indie Flower','Segoe Script',cursive;
+    font-size:1.8em;color:#FFFACD;text-shadow:0 0 7px #FFD700;text-align:center;
+    margin-top:clamp(16px,3.5vh,28px);animation:parpadeo 2.2s ease-in-out infinite;
+  }
+  @keyframes parpadeo{0%,100%{opacity:.55;}50%{opacity:1;}}
+  @media (prefers-reduced-motion:reduce){
+    #inicio-flor,#inicio-texto{animation:none;}
+  }
+
+  /* Contador discreto */
+  #datos{position:fixed;left:12px;bottom:10px;z-index:10;pointer-events:none;
+    color:rgba(255,250,205,.5);font-family:'Indie Flower',cursive;font-size:15px;}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<h1 id="titulo">Feliz Día de las Flores Amarillas 🌻</h1>
+
+<div id="inicio">
+  <div id="inicio-flor" aria-hidden="true">🌻</div>
+  <div id="inicio-texto">Toca para iniciar</div>
+</div>
+<div id="datos"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ============ Frases propias del Día de las Flores Amarillas ============ */
+var FRASES = [
+  "🌻 Amarillo es tu color hoy", "🌼 Flores para quien ilumina",
+  "🌻 Que el sol te acompañe siempre", "🌼 Hoy todo florece contigo",
+  "🌻 Eres mi girasol favorito", "🌼 Gracias por tanta luz",
+  "🌻 El 21 de septiembre es tuyo", "🌼 Amarillo como tu alegría",
+  "🌻 Florece donde estés", "🌼 Tu sonrisa es primavera",
+  "🌻 Un pétalo por cada risa tuya", "🌼 Contigo brilla más el día",
+  "🌻 Que nunca te falten flores", "🌼 Eres luz en maceta",
+  "🌻 Hoy el cielo es amarillo", "🌼 Para la reina del girasol",
+  "🌻 Cultivas cariño donde vas", "🌼 Dorado como tu corazón",
+  "🌻 Feliz día, flor bonita", "🌼 El jardín te aplaude hoy",
+  "🌻 Siembra amor, cosecha sonrisas", "🌼 Tu día, tus flores",
+  "🌻 Nadie brilla como tú", "🌼 Amarillo de felicidad"
+];
+var FOTOS = ["assets/img1.png","assets/img2.png","assets/img3.png","assets/img4.png","assets/img5.png"];
+
+/* ============ Escena base ============ */
+var canvas = document.getElementById("c");
+var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); // tope 1.5: fluido en PC lentas
+renderer.setSize(window.innerWidth, window.innerHeight);
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
+var distObj = 300, distAct = 300, rotX = 0.2, rotY = 0;
+
+/* ============ Estrellas ============ */
+(function estrellas(total, radio){
+  var geo = new THREE.BufferGeometry();
+  var pos = new Float32Array(total * 3);
+  for (var i = 0; i < total; i++){
+    var r = radio * (0.3 + Math.random() * 0.7);
+    var th = Math.random() * Math.PI * 2;
+    var ph = Math.acos(2 * Math.random() - 1);
+    pos[i*3]   = r * Math.sin(ph) * Math.cos(th);
+    pos[i*3+1] = r * Math.cos(ph);
+    pos[i*3+2] = r * Math.sin(ph) * Math.sin(th);
+  }
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ size: 1.5, color: 0xffffff, depthWrite: false })));
+})(1500, 3000);
+
+/* ============ Agujero negro (núcleo oscuro) ============ */
+var nucleo = new THREE.Mesh(
+  new THREE.SphereGeometry(40, 48, 48),
+  new THREE.MeshPhongMaterial({ color: 0x030303, transparent: true, opacity: 0.92, shininess: 30 })
+);
+scene.add(nucleo);
+
+/* ============ Resplandor dorado ============ */
+function texturaResplandor(px, dentro, fuera){
+  var c = document.createElement("canvas"); c.width = c.height = px;
+  var g = c.getContext("2d");
+  var grad = g.createRadialGradient(px/2, px/2, px*0.05, px/2, px/2, px*0.5);
+  grad.addColorStop(0, "rgba(" + dentro + ",0.55)");
+  grad.addColorStop(0.5, "rgba(" + fuera + ",0.25)");
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = grad; g.fillRect(0, 0, px, px);
+  return new THREE.CanvasTexture(c);
+}
+var RESPLANDOR = 360;
+var halo = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: texturaResplandor(512, "255,235,130", "255,180,0"),
+  transparent: true, depthWrite: false
+}));
+halo.scale.set(RESPLANDOR, RESPLANDOR, 1);
+scene.add(halo);
+
+/* ============ Anillo dorado con franjas ============ */
+function texturaAnillo(px){
+  var c = document.createElement("canvas"); c.width = c.height = px;
+  var g = c.getContext("2d"); g.translate(px/2, px/2);
+  var rIn = px * 0.205, rOut = px * 0.49;
+  var base = g.createRadialGradient(0, 0, rIn, 0, 0, rOut);
+  base.addColorStop(0.00, "rgba(255,255,245,1)");
+  base.addColorStop(0.30, "rgba(255,235,120,1)");
+  base.addColorStop(0.65, "rgba(255,200,40,0.95)");
+  base.addColorStop(1.00, "rgba(255,160,0,0.85)");
+  g.fillStyle = base;
+  g.beginPath();
+  g.arc(0, 0, rOut, 0, Math.PI * 2);
+  g.arc(0, 0, rIn, 0, Math.PI * 2, true);
+  g.closePath(); g.fill();
+  // Franjas finas estilo Saturno (solo matizan el brillo, sin huecos)
+  var franjas = 26;
+  for (var i = 0; i < franjas; i++){
+    var r = rIn + (rOut - rIn) * (i / (franjas - 1));
+    g.beginPath();
+    g.arc(0, 0, r, 0, Math.PI * 2);
+    g.lineWidth = (rOut - rIn) / franjas * (0.55 + Math.random() * 0.35);
+    g.strokeStyle = (i % 3 === 0) ? "rgba(110,60,0,0.20)" : "rgba(255,255,225,0.16)";
+    g.stroke();
+  }
+  return new THREE.CanvasTexture(c);
+}
+var anillo = new THREE.Mesh(
+  new THREE.RingGeometry(42, 116, 128),
+  new THREE.MeshBasicMaterial({ map: texturaAnillo(1024), transparent: true, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })
+);
+anillo.rotation.x = Math.PI / 2;
+scene.add(anillo);
+
+/* ============ Frases flotantes ============ */
+var DORADOS = ["#ffd700","#ffe066","#ffcc33","#ffb347","#fff2b0","#ffaa00","#f4c430","#e6b800","#ffdb58","#f0c419"];
+function texturaFrase(texto, color){
+  var c = document.createElement("canvas"); c.width = 512; c.height = 128;
+  var x = c.getContext("2d");
+  x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillStyle = "#fff"; x.shadowColor = color; x.shadowBlur = 30;
+  var max = c.width - 48, px = 60; // la fuente se achica hasta que la frase quepa
+  x.font = px + "px 'Indie Flower', cursive";
+  while (x.measureText(texto).width > max && px > 24){
+    px -= 2;
+    x.font = px + "px 'Indie Flower', cursive";
+  }
+  x.fillText(texto, c.width / 2, c.height / 2);
+  return new THREE.CanvasTexture(c);
+}
+var grupoFrases = new THREE.Group(); scene.add(grupoFrases);
+var TOTAL_FRASES = 120;
+function sembrarFrases(){
+  for (var i = 0; i < TOTAL_FRASES; i++){
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: texturaFrase(FRASES[i % FRASES.length], DORADOS[i % DORADOS.length]),
+      transparent: true
+    }));
+    sp.scale.set(68, 21.8, 1);
+    var phi = Math.acos(2 * Math.random() - 1);
+    var theta = Math.random() * Math.PI * 2;
+    var r = 150 + Math.random() * 120;
+    sp.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+    sp.userData = { phi: phi, theta: theta, r: r, v: 0.001 + Math.random() * 0.001 };
+    grupoFrases.add(sp);
+  }
+}
+// Las frases se dibujan cuando la fuente manuscrita ya cargó,
+// si no quedarían grabadas con la fuente de respaldo.
+if (document.fonts && document.fonts.load){
+  document.fonts.load("40px 'Indie Flower'").catch(function(){}).then(sembrarFrases);
+} else { sembrarFrases(); }
+
+/* ============ Fotos de flores flotando ============ */
+var grupoFotos = new THREE.Group(); scene.add(grupoFotos);
+var cargador = new THREE.TextureLoader();
+var TOTAL_FOTOS = 20;
+for (var f = 0; f < TOTAL_FOTOS; f++){
+  (function(indice){
+    var tam = 28 + Math.random() * 20;
+    var mat = new THREE.SpriteMaterial({ transparent: true });
+    var sp = new THREE.Sprite(mat);
+    sp.scale.set(tam, tam, 1);
+    cargador.load(FOTOS[indice % FOTOS.length], function(tex){
+      mat.map = tex; mat.needsUpdate = true;
+      var img = tex.image;
+      if (img && img.width && img.height){ // conserva la proporción real
+        var asp = img.width / img.height;
+        sp.scale.set(tam * Math.min(1, asp), tam * Math.min(1, 1 / asp), 1);
+      }
+    });
+    var phi = Math.acos(2 * Math.random() - 1);
+    var theta = Math.random() * Math.PI * 2;
+    var r = 140 + Math.random() * 170;
+    sp.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+    sp.userData = { phi: phi, theta: theta, r: r, v: 0.0006 + Math.random() * 0.0012 };
+    grupoFotos.add(sp);
+  })(f);
+}
+
+/* ============ Cámara: arrastrar + zoom ============ */
+var arrastrando = false, ultimoX = 0, ultimoY = 0;
+function alPulsar(e){
+  arrastrando = true;
+  var t = e.touches ? e.touches[0] : e;
+  ultimoX = t.clientX; ultimoY = t.clientY;
+}
+function alMover(e){
+  if (!arrastrando) return;
+  var t = e.touches ? e.touches[0] : e;
+  rotY -= ((t.clientX - ultimoX) / window.innerWidth) * 5;
+  rotX = Math.max(-1.2, Math.min(1.2, rotX + ((t.clientY - ultimoY) / window.innerHeight) * 3.5));
+  ultimoX = t.clientX; ultimoY = t.clientY;
+}
+function alSoltar(){ arrastrando = false; }
+window.addEventListener("mousedown", alPulsar);
+window.addEventListener("mousemove", alMover);
+window.addEventListener("mouseup", alSoltar);
+window.addEventListener("touchstart", alPulsar, { passive: true });
+window.addEventListener("touchmove", alMover, { passive: true });
+window.addEventListener("touchend", alSoltar, { passive: true });
+window.addEventListener("wheel", function(e){
+  distObj = Math.max(160, Math.min(600, distObj + e.deltaY * 0.25));
+}, { passive: true });
+
+// Pellizco para zoom en celular
+var pellizco = 0;
+window.addEventListener("touchmove", function(e){
+  if (e.touches && e.touches.length === 2){
+    e.preventDefault();
+    var dx = e.touches[0].clientX - e.touches[1].clientX;
+    var dy = e.touches[0].clientY - e.touches[1].clientY;
+    var d = Math.sqrt(dx * dx + dy * dy);
+    if (pellizco) distObj = Math.max(160, Math.min(600, distObj + (pellizco - d) * 0.5));
+    pellizco = d;
+  }
+}, { passive: false });
+window.addEventListener("touchend", function(){ pellizco = 0; }, { passive: true });
+
+/* ============ Animación ============ */
+var tiempo = 0;
+var datos = document.getElementById("datos");
+datos.textContent = FRASES.length + " frases · " + FOTOS.length + " flores";
+function orbitar(sp, t){
+  sp.userData.theta += sp.userData.v;
+  sp.position.x = sp.userData.r * Math.sin(sp.userData.phi) * Math.cos(sp.userData.theta);
+  sp.position.z = sp.userData.r * Math.sin(sp.userData.phi) * Math.sin(sp.userData.theta);
+}
+function tick(){
+  requestAnimationFrame(tick);
+  if (document.hidden) return; // no gasta batería en otra pestaña
+  tiempo += 0.01;
+  anillo.rotation.z += 0.003;
+  var haloS = 1 + Math.sin(tiempo * 0.4) * 0.03; // halo que respira
+  halo.scale.set(RESPLANDOR * haloS, RESPLANDOR * haloS, 1);
+  var latido = 1 + 0.05 * Math.sin(tiempo * 3); // núcleo que late
+  nucleo.scale.set(latido, latido, latido);
+  var i, lista;
+  lista = grupoFrases.children;
+  for (i = 0; i < lista.length; i++){
+    lista[i].material.opacity = 0.8 + 0.2 * Math.sin(tiempo * 2);
+    orbitar(lista[i], tiempo);
+  }
+  lista = grupoFotos.children;
+  for (i = 0; i < lista.length; i++){
+    lista[i].material.opacity = 0.85 + 0.15 * Math.sin(tiempo * 2 + lista[i].userData.r);
+    orbitar(lista[i], tiempo); // las fotos solo orbitan, siempre derechas
+  }
+  distAct += (distObj - distAct) * 0.06;
+  var cx = Math.cos(rotX), sx = Math.sin(rotX);
+  var cy = Math.cos(rotY), sy = Math.sin(rotY);
+  camera.position.set(distAct * sy * cx, distAct * sx, distAct * cy * cx);
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+}
+tick();
+
+window.addEventListener("resize", function(){
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* ============ Arranque al tocar ============ */
+var inicio = document.getElementById("inicio");
+inicio.addEventListener("click", function(){
+  inicio.classList.add("oculta");
+  setTimeout(function(){ inicio.style.display = "none"; }, 800);
+});
+})();
+</script>
+</body>
+</html>
+</script>
+</body>
+</html>
