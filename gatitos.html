@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Galaxia Nebulosa · Día de las Flores Amarillas 🌻</title>
-<meta name="description" content="Galaxia con agujero negro, anillo dorado y flores amarillas flotando entre frases para ella." />
+<title>Galaxia Nebulosa · Gatitos 🐱</title>
+<meta name="description" content="Galaxia con agujero negro, anillo dorado y gatitos flotando entre frases cariñosas." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌻</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,14 +72,14 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<h1 id="titulo">Feliz Día de las Flores Amarillas 🌻</h1>
+<h1 id="titulo">Feliz Día de los Michis 🐱</h1>
 
 <div id="inicio">
-  <div id="inicio-flor" aria-hidden="true">🌻</div>
+  <div id="inicio-flor" aria-hidden="true">🐱</div>
   <div id="inicio-texto">Toca para iniciar</div>
 </div>
 <div id="datos"></div>
-<a id="cambiar" href="gatitos.html">🌌 Cambiar de nebulosa 🐱</a>
+<a id="cambiar" href="index.html">🌻 Volver a las flores</a>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.min.js"></script>
 <script>
@@ -88,20 +88,20 @@
 
 /* ============ Frases propias del Día de las Flores Amarillas ============ */
 var FRASES = [
-  "🌻 Amarillo es tu color hoy", "🌼 Flores para quien ilumina",
-  "🌻 Que el sol te acompañe siempre", "🌼 Hoy todo florece contigo",
-  "🌻 Eres mi girasol favorito", "🌼 Gracias por tanta luz",
-  "🌻 El 21 de septiembre es tuyo", "🌼 Amarillo como tu alegría",
-  "🌻 Florece donde estés", "🌼 Tu sonrisa es primavera",
-  "🌻 Un pétalo por cada risa tuya", "🌼 Contigo brilla más el día",
-  "🌻 Que nunca te falten flores", "🌼 Eres luz en maceta",
-  "🌻 Hoy el cielo es amarillo", "🌼 Para la reina del girasol",
-  "🌻 Cultivas cariño donde vas", "🌼 Dorado como tu corazón",
-  "🌻 Feliz día, flor bonita", "🌼 El jardín te aplaude hoy",
-  "🌻 Siembra amor, cosecha sonrisas", "🌼 Tu día, tus flores",
-  "🌻 Nadie brilla como tú", "🌼 Amarillo de felicidad"
+  "🐱 Ronroneos desde la galaxia", "🐾 Huellitas de amor para ti",
+  "🐱 Eres mi michi favorito", "🐾 Que nunca falten ronroneos",
+  "🐱 Contigo todo es miau-gia", "🐾 Un gatito te manda abrazos",
+  "🐱 Tu ternura es felina", "🐾 Maúlla de felicidad hoy",
+  "🐱 Bigotes de buena suerte", "🐾 Eres amor con patitas",
+  "🐱 La galaxia ronronea por ti", "🐾 Nueve vidas de cariño",
+  "🐱 Siesta feliz, michi feliz", "🐾 Tus ojos brillan como estrellas",
+  "🐱 Pelitos de alegría", "🐾 El universo te adoptó",
+  "🐱 Miau también dice te quiero", "🐾 Suave como un minino",
+  "🐱 Hoy mandan los michis", "🐾 Reina de los gatitos",
+  "🐱 Purrfecto día para ti", "🐾 Un michi te cuida siempre",
+  "🐱 Que tu día sea esponjoso", "🐾 Feliz día entre bigotes"
 ];
-var FOTOS = ["assets/img1.png","assets/img2.png","assets/img3.png","assets/img4.png","assets/img5.png"];
+var FOTOS = ["assets/gatos/gato1.png","assets/gatos/gato2.png","assets/gatos/gato3.png","assets/gatos/gato4.png","assets/gatos/gato5.png"];
 
 /* ============ Escena base ============ */
 var canvas = document.getElementById("c");
